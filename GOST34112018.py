@@ -1,6 +1,5 @@
 from struct import pack
 from struct import unpack
-import binascii
 
 # Функция xor для двух строк бит
 def strxor(a, b):
@@ -44,7 +43,7 @@ Pi = bytearray((
      75,  99, 182,
 ))
 
-A = [unpack(">Q", binascii.unhexlify(s))[0] for s in (
+A = [unpack(">Q", bytes.fromhex(s))[0] for s in (
    "8e20faa72ba0b470", "47107ddd9b505a38", "ad08b0e0c3282d1c", "d8045870ef14980e",
    "6c022c38f90a4c07", "3601161cf205268d", "1b8e0b0e798c13c8", "83478b07b2468764",
    "a011d380818e8f40", "5086e740ce47c920", "2843fd2067adea10", "14aff010bdd87508",
@@ -74,7 +73,7 @@ Tau = (
     7, 15, 23, 31, 39, 47, 55, 63,
 )
 
-C = [binascii.unhexlify("".join(s))[::-1] for s in (
+C = [bytes.fromhex("".join(s))[::-1] for s in (
     (
         "b1085bda1ecadae9ebcb2f81c0657c1f",
         "2f6a76432e45d016714eb88d7585c4fc",
@@ -255,14 +254,19 @@ class GOST341112(object):
         return self.hsh
 
 
-def hash_msg(text):
+def hash_msg(text:bytes):
+    #print(text)
     #text = b'foobar'
-    m = binascii.unhexlify(text)[::-1]
-    hash = GOST341112(m, digest_size=256).digest()[::-1]
+    encoded = text.hex()
+    m = bytes.fromhex(encoded)
+    hash = GOST341112(m, digest_size=256).digest()
+    #print(hash.hex())
     return hash
 
 if __name__ == "__main__":
-    text = "fbe2e5f0eee3c820fbeafaebef20fffbf0e1e0f0f520e0ed20e8ece0ebe5f0f2f120fff0eeec20f120faf2fee5e2202ce8f6f3ede220e8e6eee1e8f0f2d1202ce8f0f2e5e220e5d1"
-    m = binascii.unhexlify(text)[::-1]
-    hash = GOST341112(m, digest_size=256).digest()[::-1]
+    # from utf-8 to internet version
+    text = "Minaev Maxim && Zubov Timofey".encode('utf-8').hex()
+    m = bytes.fromhex(text)
+    print(m)
+    hash = GOST341112(m, digest_size=256).digest()
     print(f"Хэш из ГОСТ 34-11 2018: {hash.hex()}")
