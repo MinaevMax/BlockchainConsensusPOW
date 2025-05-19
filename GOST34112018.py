@@ -255,7 +255,6 @@ class GOST341112(object):
 
 
 def hash_msg(text:bytes):
-    #print(text)
     #text = b'foobar'
     encoded = text.hex()
     m = bytes.fromhex(encoded)
