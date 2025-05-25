@@ -70,15 +70,20 @@ class MerkleTree:
             self.print_tree(node.right, indent + "  ")
 
 
-if __name__ == '__main__':
+def build_tree_from_data():
     leaves_data = []
     cur_dir = 'data'
     for file in os.listdir(cur_dir):
         if file.endswith(".sig"):
             with open(os.path.join(cur_dir, file), 'rb') as rf:
                 leaves_data.append(rf.read())
+    return MerkleTree(leaves_data)
 
-    tree = MerkleTree(leaves_data)
+
+if __name__ == '__main__':
+    tree = build_tree_from_data()
     print("\nКорень дерева Меркла:", tree.get_root_hash().hex())
     print("\nСтруктура дерева:")
     tree.print_tree()
+
+    print(tree.root.hash, len(tree.root.hash))
