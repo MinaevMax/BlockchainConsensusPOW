@@ -8,8 +8,8 @@ g = 0x3
 
 def schnorr_sign(message: bytes, private: int) -> tuple[int, int]:
     public = pow(g, private, p)
-    
-    k = int(generate_prng(count=5)[-1], 16) 
+
+    k = int(generate_prng(count=5)[-1], 16)
     R = pow(g, k, p)
 
     # Преобразование R и P в байты фиксированной длины
@@ -22,6 +22,7 @@ def schnorr_sign(message: bytes, private: int) -> tuple[int, int]:
 
     s = (k + e * private) % q
     return R, s
+
 
 # Функция проверки подписи
 def schnorr_verify(message: bytes, signature: tuple[int, int], public: int) -> bool:
@@ -38,11 +39,12 @@ def schnorr_verify(message: bytes, signature: tuple[int, int], public: int) -> b
     # Проверка: g^s mod p == R * P^e mod p
     left = pow(g, s, p)
     right = (R * pow(public, e, p)) % p
-    
+
     print(left)
     print(right)
 
     return left == right
+
 
 message = b"Test message for Schnorr signature"
 
@@ -50,7 +52,7 @@ private = int(generate_prng(count=1)[-1], 16) % q
 public = pow(g, private, p)
 
 signature = schnorr_sign(message, private)
-#print(signature)
+# print(signature)
 
 valid = schnorr_verify(message, signature, public)
 
