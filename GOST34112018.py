@@ -1,5 +1,6 @@
 from struct import pack
 from struct import unpack
+import binascii
 
 # Функция xor для двух строк бит
 def strxor(a, b):
@@ -263,6 +264,13 @@ def hash_msg(text:bytes):
     return hash
 
 if __name__ == "__main__":
+    """
+    from official doc 
+    
+    text = "323130393837363534333231303938373635343332313039383736353433323130393837363534333231303938373635343332313039383736353433323130"
+    m = bytes.fromhex(text)[::-1]
+    """
+    
     # from utf-8 to internet version
     text = "Minaev Maxim && Zubov Timofey".encode('utf-8').hex()
     m = bytes.fromhex(text)
