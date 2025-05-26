@@ -5,6 +5,7 @@ from schnorr_scheme import schnorr_sign, schnorr_verify, p, q, g
 
 dir = "data"
 
+KEYS_SIZE_BITES = 64
 
 def sign_file(file_name):
     private = int(generate_prng(count=1)[-1][1], 16) % q
@@ -13,8 +14,9 @@ def sign_file(file_name):
         data = f.read()
         keys = schnorr_sign(data, private)
         gen_filename = ''.join(file_name.split('.')[:-1]) + '_signed.sig'
+        print(keys)
         with open(gen_filename, "wb") as fw:
-            signed_data = data + keys[0].to_bytes(32, byteorder='big') + keys[1].to_bytes(32, byteorder='big')
+            signed_data = data + keys[0].to_bytes(KEYS_SIZE_BITES, byteorder='big') + keys[1].to_bytes(KEYS_SIZE_BITES, byteorder='big')
             fw.write(signed_data)
     return gen_filename, len(signed_data)
 
@@ -26,8 +28,8 @@ def verify_file(file_name):
     with open(file_name, "rb") as f:
         all_data = f.read()
         data = all_data[:200]
-        keyR = all_data[len(data):len(data) + 32]
-        keyS = all_data[len(data) + 32:]
+        keyR = all_data[len(data):len(data) + KEYS_SIZE_BITES]
+        keyS = all_data[len(data) + KEYS_SIZE_BITES:]
         verified = schnorr_verify(data, (int.from_bytes(keyR, byteorder='big'), int.from_bytes(keyS, byteorder='big')),
                                   public)
         return verified
