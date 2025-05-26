@@ -1,6 +1,5 @@
 from struct import pack
 from struct import unpack
-import binascii
 
 
 # Функция xor для двух строк бит
