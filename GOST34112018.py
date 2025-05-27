@@ -201,11 +201,7 @@ def L(data):
 
 
 class GOST341112(object):
-    def __init__(self, data=b'', digest_size=512):
-        """
-        :param digest_size: hash digest size to compute
-        :type digest_size: 256 or 512
-        """
+    def __init__(self, data=b'', digest_size=256):
         self.digest_size = digest_size
         self.data = data
         self.IV = BLOCKSIZE * b'\x01'
@@ -213,8 +209,6 @@ class GOST341112(object):
         self.sigma = BLOCKSIZE * b'\x00'
 
     def digest(self):
-        """ Get hash of the provided data
-        """
         n = 0
         data = self.data
         for i in range(0, len(data) // BLOCKSIZE * BLOCKSIZE, BLOCKSIZE):
@@ -222,32 +216,21 @@ class GOST341112(object):
             self.hsh = g(n, self.hsh, m)
             # print(self.hsh[::-1].hex())
             self.sigma = add512bit(self.sigma, m)
-            # print(self.sigma[::-1].hex())
             n += 512
 
-        # Шаг 3.1
         padblock_size = len(data) * 8 - n
         data += b'\x01'
         padlen = BLOCKSIZE - len(data) % BLOCKSIZE
         if padlen != BLOCKSIZE:
             data += b'\x00' * padlen
 
-        # Преобразование g_n(h, m)
         self.hsh = g(n, self.hsh, data[-BLOCKSIZE:])
-        # print(self.hsh[::-1].hex())
         n += padblock_size
         self.sigma = add512bit(self.sigma, data[-BLOCKSIZE:])
-        # print(self.sigma[::-1].hex())
 
-        # Преобразование g_0(h, N)
         self.hsh = g(0, self.hsh, pack("<Q", n) + 56 * b'\x00')
-        # print(self.hsh[::-1].hex())
 
-        # Преобразование g_0(h, sigma)
         self.hsh = g(0, self.hsh, self.sigma)
-        # print(self.hsh[::-1].hex())
-
-        # print()
 
         # Получение хэш-кода для 256 бит
         if self.digest_size == 256:

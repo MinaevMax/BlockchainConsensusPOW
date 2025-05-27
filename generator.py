@@ -17,11 +17,10 @@ def generate_prng(fullname: str = "Minaev Maxim && Zubov Timofey", count: int = 
     h0 = hash_msg(initial_input)
     # print(f"ho с именами авторов-студентов: {h0.hex()}")
 
-    # Циклы генерации псевдослучайных чисел
     results = []
     for i in range(1, count + 1):
-        i_bytes = i.to_bytes(32, byteorder='little')  # i как 256 бит (32 байта)
-        hi = hash_msg(h0 + i_bytes)  # 64 байта (512 бит)
+        i_bytes = i.to_bytes(32, byteorder='little') 
+        hi = hash_msg(h0 + i_bytes) 
         results.append((hi, hi.hex()))
     return results
 

@@ -27,7 +27,6 @@ def schnorr_sign(message: bytes, private: int) -> tuple[int, int]:
     return R, s
 
 
-# Функция проверки подписи
 def schnorr_verify(message: bytes, signature: tuple[int, int], public: int) -> bool:
     R, s = signature
 
