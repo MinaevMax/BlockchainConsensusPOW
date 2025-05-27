@@ -4,11 +4,6 @@ from struct import unpack
 
 # Функция xor для двух строк бит
 def strxor(a, b):
-    """ XOR of two strings
-
-    This function will process only shortest length of both strings,
-    ignoring remaining one.
-    """
     mlen = min(len(a), len(b))
     a, b, xor = bytearray(a), bytearray(b), bytearray(mlen)
     for i in range(mlen):
@@ -152,8 +147,6 @@ C = [bytes.fromhex("".join(s))[::-1] for s in (
 
 # Побитовое сложение двух массивов
 def add512bit(a, b):
-    """ Add two 512 integers
-    """
     a = bytearray(a)
     b = bytearray(b)
     cb = 0
